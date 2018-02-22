@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+DISTRIBUTION := $(shell lsb_release -sc)
+VERSION := $(shell make --no-print-directory version)
+DEBVERSION = $(VERSION)-0~$(DISTRIBUTION)0
+
+%:
+	dh $@
+
+override_dh_gencontrol:
+	dh_gencontrol -- -$(DEBVERSION)
+
+override_dh_auto_build:
+	# nothing
+override_dh_auto_test:
+	# Run tests during integration tests

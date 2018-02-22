@@ -1,0 +1,17 @@
+language: go
+
+dist: trusty
+
+go:
+- 1.8
+- 1.9
+- tip
+
+env:
+  - GIMME_OS=linux GIMME_ARCH=amd64
+
+cache: apt
+
+script:
+  - make
+  - go test -race -coverprofile=coverage.out -covermode=atomic .
