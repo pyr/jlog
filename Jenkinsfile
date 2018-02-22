@@ -38,7 +38,7 @@ def Build() {
   golang.pull()
   stage('build') {
     golang.inside() {
-      sh 'mkdir -p /go/src/jlog
+      sh 'mkdir -p /go/src/jlog'
       sh 'cp Jenkinsfile  Makefile  README.md jlog.go /go/src/jlog'
       sh 'cd /go/src/jlog && make'
       sh 'cp /go/src/jlog/jlog .'
