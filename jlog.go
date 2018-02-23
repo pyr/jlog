@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
-	"os"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"encoding/json"
+	"os"
+	"strings"
 	"syscall"
 	"time"
 	"unsafe"
@@ -78,6 +79,7 @@ func ShowLine(colorOutput bool, showExtra bool, line string) {
 
 	color := COLOR_NONE;
 	level,_ := msg["level"].(string)
+	level = strings.ToUpper(level)
 	if (colorOutput) {
 		if (level == "INFO") {
 			color = COLOR_GREEN
