@@ -8,28 +8,13 @@ node {
 
   try {
     dir('src') {
-      stage('checkout source code') {
-        checkout scm
-      }
-
-      stage('go build') { build(repo) }
-
-      build(repo)
-
-      stage('build deb package') {
-        parallel(
-	  "xenial": { gitPbuilder('xenial', false, '../build-area-xenial') },
-	  "bionic": { gitPbuilder('bionic', false, '../build-area-bionic') }
-	)
-      }
-
+      stage('checkout source code') { checkout scm }
+      stage('go build')             { build(repo) }
+      stage('build deb package')    { gitPbuilder('bionic') }
     }
     stage('upload packages') {
-      parallel(
-        "xenial": { aptlyBranchUpload('xenial','main','build-area-xenial/*.deb') },
-	"bionic": { aptlyBranchUpload('bionic','main','build-area-bionic/*.deb') }
-	)
-      }
+       aptlyUpload('staging', 'bionic', 'main', '../build-area/*deb')
+    }
   }
   catch (err) {
     currentBuild.result = 'FAILURE'
