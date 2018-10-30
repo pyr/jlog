@@ -6,7 +6,7 @@ RM =		rm -f
 all: $(PKG)
 
 $(PKG): $(PKG).go
-	go build
+	go build -o $(PKG)
 
 .PHONY: clean
 clean:
