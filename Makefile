@@ -1,4 +1,3 @@
-VERSION = 	v0.1.1-snapshot
 PKG = 		jlog
 MAIN = 		$(PKG).go
 RM =		rm -f

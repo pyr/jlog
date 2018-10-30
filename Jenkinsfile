@@ -36,7 +36,9 @@ node {
 
   finally {
     if (currentBuild.result != 'FAILURE') {
+      currentBuild.result = 'SUCCESS'
     }
+    updateGithubCommitStatus(currentBuild.result, "${env.WORKSPACE}/src")
   }
 }
 
