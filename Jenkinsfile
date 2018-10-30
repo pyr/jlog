@@ -8,12 +8,13 @@ node {
 
   try {
     dir('src') {
-      stage('checkout source code') { checkout scm }
-      stage('go build')             { build(repo) }
-      stage('build deb package')    { gitPbuilder('bionic') }
-    }
-    stage('upload packages') {
-       aptlyUpload('staging', 'bionic', 'main', '../build-area/*deb')
+      stage('checkout') { checkout scm }
+      stage('build')    { build(repo) }
+      stage('package')  { gitPbuilder('bionic') }
+      stage('upload')   { aptlyUpload('staging',
+                                      'bionic',
+                                      'main',
+                                      '../build-area/*deb') }
     }
   }
   catch (err) {
