@@ -13,14 +13,19 @@ node {
       Build()
 
       stage('build deb package') {
-        gitPbuilder('xenial')
+        parallel(
+	  "xenial": { gitPbuilder('xenial', false '../build-area-xenial') },
+	  "bionic": { gitPbuilder('bionic', false, '../build-area-bionic') }
+	)
       }
 
-      stage('upload packages') {
-                sh 'cp ../build-area/*.deb .'
-		aptlyUpload('staging')
-      }
     }
+    stage('upload packages') {
+      parallel(
+        "xenial": { aptlyBranchUpload('xenial','main','build-area-xenial/*.deb') },
+	"bionic": { aptlyBranchUpload('bionic','main','build-area-bionic/*.deb') }
+	)
+      }
   }
   catch (err) {
     currentBuild.result = 'FAILURE'
