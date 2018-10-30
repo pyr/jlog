@@ -14,7 +14,7 @@ node {
 
       stage('build deb package') {
         parallel(
-	  "xenial": { gitPbuilder('xenial', false '../build-area-xenial') },
+	  "xenial": { gitPbuilder('xenial', false, '../build-area-xenial') },
 	  "bionic": { gitPbuilder('bionic', false, '../build-area-bionic') }
 	)
       }
