@@ -1,5 +1,7 @@
 @Library('jenkins-pipeline') _
 
+repo = "pyr/jlog"
+
 node {
   // Wipe the workspace so we are building completely clean
   cleanWs()
@@ -10,7 +12,7 @@ node {
         checkout scm
       }
 
-      Build()
+      build(repo)
 
       stage('build deb package') {
         parallel(
@@ -38,16 +40,10 @@ node {
   }
 }
 
-def Build() {
-  def golang = docker.image('golang:latest')
-  golang.pull()
-  stage('build') {
-    golang.inside() {
-      sh 'mkdir -p /go/src/jlog'
-      sh 'cp Jenkinsfile  Makefile  README.md jlog.go /go/src/jlog'
-      sh 'cd /go/src/jlog && make'
-      sh 'cp /go/src/jlog/jlog .'
-      sh 'make version > .version'
-    }
+def build(repo) {
+  docker.withRegistry('https://registry.internal.exoscale.ch') {
+    def image = docker.image('registry.internal.exoscale.ch/exoscale/golang:1.11')
+    image.pull()
+    image.inside('-u root --net=host') { sh 'make' }
   }
 }
