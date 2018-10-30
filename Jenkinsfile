@@ -12,6 +12,8 @@ node {
         checkout scm
       }
 
+      stage('go build') { build(repo) }
+
       build(repo)
 
       stage('build deb package') {
