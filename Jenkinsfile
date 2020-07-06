@@ -10,11 +10,20 @@ node {
     dir('src') {
       stage('checkout') { checkout scm }
       stage('build')    { build(repo) }
-      stage('package')  { gitPbuilder('bionic') }
-      stage('upload')   { aptlyUpload('staging',
-                                      'bionic',
-                                      'main',
-                                      '../build-area/*deb') }
+      stage('package')  {
+        parallel (
+          "bionic": {
+              gitPbuilder('bionic', false, '../build-area-bionic')
+          },
+          "focal": {
+              gitPbuilder('focal', false, '../build-area-focal')
+          }
+        )
+      }
+      stage('upload')   {
+        aptlyUpload('staging', 'bionic', 'main', '../build-area-bionic/*deb')
+        aptlyUpload('staging', 'focal', 'main', '../build-area-focal/*deb')
+      }
     }
   }
   catch (err) {
